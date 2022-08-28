@@ -4,27 +4,30 @@
       <h1 class="title">記帳 631 理財小幫手</h1>
       <div class="row account">
         <div class="col-md-3">
-          <div class="item">
+          <div class="item salary">
             <p class="item-title">當月薪水</p>
-            <p class="item-money">$40,000</p>
+            <p class="item-money">${{total | commaFormat}}</p>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend">
-            <p class="item-title">生活支出 60%</p>
-            <p class="item-money" :class="{'not-zero': livingExpense > 0}">${{ livingExpense }}</p>
+          <div class="item expend" :class="{'coloring': livingExpenseDegree > 0}">
+            <p class="item-title">生活支出</p>
+            <p class="item-money" :class="{'not-zero': livingExpense > 0}">${{ livingExpense | commaFormat }}</p>
+            <div v-if="livingExpenseDegree < 100" class="wave" :style="{'bottom': livingExpenseDegree + '%'}"></div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend">
-            <p class="item-title">投資 30%</p>
-            <p class="item-money" :class="{'not-zero': invest > 0}">${{ invest }}</p>
+          <div class="item expend" :class="{'coloring': investDegree > 0}">
+            <p class="item-title">投資</p>
+            <p class="item-money" :class="{'not-zero': invest > 0}">${{ invest | commaFormat }}</p>
+            <div v-if="investDegree < 100" class="wave" :style="{'bottom': investDegree + '%'}"></div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend">
-            <p class="item-title">儲蓄 10%</p>
-            <p class="item-money" :class="{'not-zero': savings > 0}">${{ savings }}</p>
+          <div class="item expend" :class="{'coloring': savingsDegree > 0}">
+            <p class="item-title">儲蓄</p>
+            <p class="item-money" :class="{'not-zero': savings > 0}">${{ savings | commaFormat }}</p>
+            <div v-if="savingsDegree < 100" class="wave" :style="{'bottom': savingsDegree + '%'}"></div>
           </div>
         </div>
       </div>
@@ -91,18 +94,46 @@ import moment from 'moment';
 export default {
   data(){
     return {
-      livingExpense : 0,
-      invest        : 0,
-      savings       : 0,
-      list          : [],
-      date      : '',
-      cash      : 0,
-      category  : '',
-      disc      : ''
+      total                  : 40000,
+      livingExpense          : 0,
+      invest                 : 0,
+      savings                : 0,
+      list                   : [],
+      date                   : '',
+      cash                   : 0,
+      category               : '',
+      disc                   : '',
     }
   },
-  created () {
-    
+  filters: {
+    commaFormat (val) {
+      return val.toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital){
+        return pre + groupOf3Digital.replace(/\d{3}/g, ',$&');
+      })
+    }
+  },
+  computed: {
+    livingExpenseDegree () {
+      if (this.livingExpense > 0) {
+        return (this.livingExpense / (this.total * 0.6)) * 100
+      } else {
+        return -4
+      }
+    },
+    investDegree () {
+      if (this.invest > 0) {
+        return (this.invest / (this.total * 0.3)) * 100
+      } else {
+        return -4
+      }
+    },
+    savingsDegree () {
+      if (this.savings > 0) {
+        return (this.savings / (this.total * 0.1)) * 100
+      } else {
+        return -4
+      }
+    }
   },
   mounted () {
     $( "#datepicker" ).datepicker(
@@ -182,8 +213,8 @@ export default {
 @import './assets/styles/main.scss';
 
 .container {
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 .title {
   @include font-setting;
@@ -197,13 +228,18 @@ export default {
   margin-bottom: 50px;
   .item {
     padding: 20px;
-    background-color: #F4A261;
+    background-color: white;
     border-radius: 10px;
     height: 245px;
     position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 6px solid #F4A261;
+    z-index: 100;
     &.expend {
-      background-color: #F5F1E3;
+      // background-color: white;
       .item-title {
+        text-align: center;
         font-size: 28px;
         color: #707070;
       }
@@ -221,6 +257,7 @@ export default {
       }
     }
     .item-title {
+      text-align: center;
       font-size: 28px;
       color: white;
     }
@@ -233,6 +270,37 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
     }
+  }
+  .salary {
+    background-color: #F4A261;
+  }
+  .coloring {
+    background-color: #F5F1E3;
+  }
+  // 水波紋效果 https://blog.csdn.net/ak852369/article/details/100705102
+  .wave {
+    position: absolute;
+    left: 50%;
+    width: 480px;
+    height: 500px;
+    background-color: #fff;
+    border-radius: 40%;
+    animation-duration: 6s;
+    animation-name: rotate;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    z-index: -1;
+  }
+}
+@keyframes rotate {
+  0% {
+    transform: translate(-50%, 0) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
+  }
+  100% {
+    transform: translate(-50%, 0) rotateZ(360deg);
   }
 }
 .input-info {
