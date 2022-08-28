@@ -2,6 +2,9 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/manageFinances/'
+    : '/',
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
