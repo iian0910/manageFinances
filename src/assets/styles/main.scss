@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/functions";
+@import './help/variables';
+@import "~bootstrap/scss/bootstrap";
+
+@mixin font-setting {
+  font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  line-height: 150%;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
