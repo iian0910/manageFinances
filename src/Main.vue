@@ -6,27 +6,27 @@
         <div class="col-md-3">
           <div class="item salary">
             <p class="item-title">當月薪資</p>
-            <p class="item-money">${{salary | commaFormat}}</p>
+            <p class="item-money">{{salary | commaFormat | priceFormat}}</p>
           </div>
         </div>
         <div class="col-md-3">
           <div class="item expend" :class="{'coloring': livingExpenseDegree > 0}">
             <p class="item-title">生活支出</p>
-            <p class="item-money" :class="{'not-zero': livingExpense > 0}">${{ livingExpense | commaFormat }}</p>
+            <p class="item-money" :class="{'not-zero': livingExpense > 0}">{{ livingExpense | commaFormat | priceFormat}}</p>
             <div v-if="livingExpenseDegree < 100" class="wave" :style="{'bottom': livingExpenseDegree + '%'}"></div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="item expend" :class="{'coloring': investDegree > 0}">
             <p class="item-title">投資</p>
-            <p class="item-money" :class="{'not-zero': invest > 0}">${{ invest | commaFormat }}</p>
+            <p class="item-money" :class="{'not-zero': invest > 0}">{{ invest | commaFormat | priceFormat}}</p>
             <div v-if="investDegree < 100" class="wave" :style="{'bottom': investDegree + '%'}"></div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="item expend" :class="{'coloring': savingsDegree > 0}">
             <p class="item-title">儲蓄</p>
-            <p class="item-money" :class="{'not-zero': savings > 0}">${{ savings | commaFormat }}</p>
+            <p class="item-money" :class="{'not-zero': savings > 0}">{{ savings | commaFormat | priceFormat}}</p>
             <div v-if="savingsDegree < 100" class="wave" :style="{'bottom': savingsDegree + '%'}"></div>
           </div>
         </div>
@@ -114,11 +114,17 @@ export default {
     lang: 'zh-Hant'
   },
   filters: {
+    priceFormat (val) {
+      return '$' + val
+    },
     commaFormat (val) {
-      console.log('val', val)
-      return val.toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital){
-        return pre + groupOf3Digital.replace(/\d{3}/g, ',$&');
-      })
+      if (val && val > 0) {
+        return val.toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital){
+          return pre + groupOf3Digital.replace(/\d{3}/g, ',$&');
+        })
+      } else {
+        return 0
+      }
     }
   },
   computed: {
@@ -153,11 +159,15 @@ export default {
     );
     
     const ORG_LIST = localStorage.getItem('DATA_LIST')
-    const ORG_SALARY = localStorage.getItem('DATA_SALARY')
-    if (ORG_LIST && ORG_SALARY) {
+
+    if (ORG_LIST) {
       const dataList = JSON.parse(ORG_LIST)
       this.list = dataList
-      this.salary = ORG_SALARY
+      this.salary = localStorage.getItem('DATA_SALARY')
+      this.livingExpense = localStorage.getItem('LIVING_EXP')
+      console.log('livingExpense', this.livingExpense)
+      this.invest = localStorage.getItem('INVEST')
+      this.savings = localStorage.getItem('SAVINGS')
     }
   },
   methods: {
@@ -209,12 +219,15 @@ export default {
         switch (item[0]) {
           case '01':
             this.livingExpense = item[1].reduce((acc, current) => Number(acc) + Number(current.cash), 0)
+            localStorage.setItem('LIVING_EXP', this.livingExpense)
             break;
           case '02':
             this.invest = item[1].reduce((acc, current) => Number(acc) + Number(current.cash), 0)
+            localStorage.setItem('INVEST', this.invest)
             break;
           case '03':
             this.savings = item[1].reduce((acc, current) => Number(acc) + Number(current.cash), 0)
+            localStorage.setItem('SAVINGS', this.savings)
             break;
         }
       })
