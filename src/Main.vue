@@ -105,6 +105,10 @@ export default {
       disc                   : '',
     }
   },
+  metaInfo: {
+    title: '631 記帳財務管理',
+    lang: 'zh-Hant'
+  },
   filters: {
     commaFormat (val) {
       return val.toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital){
