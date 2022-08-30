@@ -5,7 +5,7 @@
       <div class="row account">
         <div class="col-md-3">
           <div class="item salary">
-            <p class="item-title">當月薪水</p>
+            <p class="item-title">當月薪資</p>
             <p class="item-money">${{total | commaFormat}}</p>
           </div>
         </div>
@@ -34,15 +34,19 @@
       <div class="input-info">
         <div class="info-contain">
           <div class="row info-contain-left">
-            <div class="col-4 d-flex mb-20 align-middle">
+            <div class="col-3 d-flex mb-20">
+              <div class="info-item col-form-label">當月薪資</div>
+              <input type="text" class="info-input form-control" v-model="total">
+            </div>
+            <div class="col-3 d-flex mb-20 align-middle">
               <div  class="info-item col-form-label">紀錄日期</div>
               <input type="text" id="datepicker" class="info-input form-control" v-model="date">
             </div>
-            <div class="col-4 d-flex mb-20">
+            <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">項目金額</div>
               <input type="text" class="info-input form-control" v-model="cash">
             </div>
-            <div class="col-4 d-flex mb-20">
+            <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">項目類別</div>
               <select class="info-input form-control" v-model="category">
                 <option value="01">生活支出</option>
@@ -320,13 +324,13 @@ export default {
       flex: 1;
       margin-right: 15px;
       .info-item {
-        margin-right: 26px;
+        margin-right: 12px;
         font-size: 18px;
         color: #7D7D7D;
         display: inline-block;
-        width: 120px;
+        width: 132px;
         &.description {
-          width: 84px;
+          width: 80px;
         }
       }
       .info-input {
