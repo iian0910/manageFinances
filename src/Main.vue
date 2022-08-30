@@ -6,7 +6,7 @@
         <div class="col-md-3">
           <div class="item salary">
             <p class="item-title">當月薪資</p>
-            <p class="item-money">${{total | commaFormat}}</p>
+            <p class="item-money">${{salary | commaFormat}}</p>
           </div>
         </div>
         <div class="col-md-3">
@@ -36,7 +36,7 @@
           <div class="row info-contain-left">
             <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">當月薪資</div>
-              <input type="text" class="info-input form-control" v-model="total">
+              <input type="text" class="info-input form-control" v-model="salary">
             </div>
             <div class="col-3 d-flex mb-20 align-middle">
               <div  class="info-item col-form-label">紀錄日期</div>
@@ -98,7 +98,7 @@ import moment from 'moment';
 export default {
   data(){
     return {
-      total                  : 40000,
+      salary                 : 0,
       livingExpense          : 0,
       invest                 : 0,
       savings                : 0,
@@ -115,6 +115,7 @@ export default {
   },
   filters: {
     commaFormat (val) {
+      console.log('val', val)
       return val.toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital){
         return pre + groupOf3Digital.replace(/\d{3}/g, ',$&');
       })
@@ -123,21 +124,21 @@ export default {
   computed: {
     livingExpenseDegree () {
       if (this.livingExpense > 0) {
-        return (this.livingExpense / (this.total * 0.6)) * 100
+        return (this.livingExpense / (this.salary * 0.6)) * 100
       } else {
         return -4
       }
     },
     investDegree () {
       if (this.invest > 0) {
-        return (this.invest / (this.total * 0.3)) * 100
+        return (this.invest / (this.salary * 0.3)) * 100
       } else {
         return -4
       }
     },
     savingsDegree () {
       if (this.savings > 0) {
-        return (this.savings / (this.total * 0.1)) * 100
+        return (this.savings / (this.salary * 0.1)) * 100
       } else {
         return -4
       }
@@ -150,6 +151,14 @@ export default {
         onSelect: this.setDateValue
       }
     );
+    
+    const ORG_LIST = localStorage.getItem('DATA_LIST')
+    const ORG_SALARY = localStorage.getItem('DATA_SALARY')
+    if (ORG_LIST && ORG_SALARY) {
+      const dataList = JSON.parse(ORG_LIST)
+      this.list = dataList
+      this.salary = ORG_SALARY
+    }
   },
   methods: {
     setDateValue (val) {
@@ -159,6 +168,7 @@ export default {
       // 取得 datepicker 資訊 - https://www.codegrepper.com/code-examples/javascript/jquery+datepicker+get+selected+date
       this.date = $('#datepicker').datepicker('getDate')
 
+      const salary = this.salary
       const date = moment(this.date).format('YYYY/MM/DD')
       const cash = this.cash
       const category = this.category
@@ -175,8 +185,10 @@ export default {
       this.cash = 0;
       this.category = '';
       this.disc = '';
-      
+
       this.calculate()
+      localStorage.setItem('DATA_SALARY', salary)
+      localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
     },
     categorySwitch (val) {
       switch (val) {
