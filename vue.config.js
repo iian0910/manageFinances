@@ -1,5 +1,5 @@
+const IN_PRODUCTION = process.env.NODE_ENV === "production";
+
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/eric-project/'
-    : '/'
+  publicPath: IN_PRODUCTION ? '/manageFinances/' : '/',
 }
