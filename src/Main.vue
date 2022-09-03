@@ -10,24 +10,60 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend" :class="{'coloring': livingExpenseDegree > 0}">
+          <div
+            class="item expend"
+            :class="{'coloring': livingExpenseDegree > 0}"
+          >
             <p class="item-title">生活支出</p>
-            <p class="item-money" :class="{'not-zero': livingExpense > 0}">{{ livingExpense | commaFormat | priceFormat}}</p>
-            <div v-if="livingExpenseDegree < 100" class="wave" :style="{'bottom': livingExpenseDegree + '%'}"></div>
+            <p
+              class="item-money"
+              :class="{'not-zero': livingExpense > 0}"
+            >
+              {{ livingExpense | commaFormat | priceFormat}}
+            </p>
+            <div
+              v-if="livingExpenseDegree < 100"
+              class="wave"
+              :style="{'bottom': livingExpenseDegree + '%'}"
+            ></div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend" :class="{'coloring': investDegree > 0}">
-            <p class="item-title">投資</p>
-            <p class="item-money" :class="{'not-zero': invest > 0}">{{ invest | commaFormat | priceFormat}}</p>
-            <div v-if="investDegree < 100" class="wave" :style="{'bottom': investDegree + '%'}"></div>
+          <div
+            class="item expend"
+            :class="{'coloring': investDegree > 0}"
+          >
+            <p class="item-title">投資理財</p>
+            <p
+              class="item-money"
+              :class="{'not-zero': invest > 0}"
+            >
+              {{ invest | commaFormat | priceFormat}}
+            </p>
+            <div
+              v-if="investDegree < 100"
+              class="wave"
+              :style="{'bottom': investDegree + '%'}"
+            ></div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="item expend" :class="{'coloring': savingsDegree > 0}">
+          <div
+            class="item expend"
+            :class="{'coloring': savingsDegree > 0}"
+          >
             <p class="item-title">儲蓄</p>
-            <p class="item-money" :class="{'not-zero': savings > 0}">{{ savings | commaFormat | priceFormat}}</p>
-            <div v-if="savingsDegree < 100" class="wave" :style="{'bottom': savingsDegree + '%'}"></div>
+            <p
+              class="item-money"
+              :class="{'not-zero': savings > 0}"
+            >
+              {{ savings | commaFormat | priceFormat}}
+            </p>
+            <div
+              v-if="savingsDegree < 100"
+              class="wave"
+              :style="{'bottom': savingsDegree + '%'}"
+            ></div>
           </div>
         </div>
       </div>
@@ -36,30 +72,53 @@
           <div class="row info-contain-left">
             <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">當月薪資</div>
-              <input type="text" class="info-input form-control" v-model="salary">
+              <input
+                type="text"
+                class="info-input form-control"
+                v-model="salary"
+              >
             </div>
             <div class="col-3 d-flex mb-20 align-middle">
-              <div  class="info-item col-form-label">紀錄日期</div>
-              <input type="text" id="datepicker" class="info-input form-control" v-model="date">
+              <div class="info-item col-form-label">紀錄日期</div>
+              <input
+                type="text"
+                id="datepicker"
+                class="info-input form-control"
+                v-model="date"
+              >
             </div>
             <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">項目金額</div>
-              <input type="text" class="info-input form-control" v-model="cash">
+              <input
+                type="text"
+                class="info-input form-control"
+                v-model="cash"
+              >
             </div>
             <div class="col-3 d-flex mb-20">
               <div class="info-item col-form-label">項目類別</div>
-              <select class="info-input form-control" v-model="category">
+              <select
+                class="info-input form-control"
+                v-model="category"
+              >
                 <option value="01">生活支出</option>
-                <option value="02">理財</option>
+                <option value="02">投資理財</option>
                 <option value="03">儲蓄</option>
               </select>
             </div>
             <div class="col-12 d-flex">
               <div class="info-item description col-form-label">項目描述</div>
-              <input type="text" class="info-input form-control" v-model="disc">
+              <input
+                type="text"
+                class="info-input form-control"
+                v-model="disc"
+              >
             </div>
           </div>
-          <div class="info-btn" @click="create">
+          <div
+            class="info-btn"
+            @click="create"
+          >
             <p class="create">新增</p>
           </div>
         </div>
@@ -72,6 +131,7 @@
               <th scope="col" class="table-item">消類金額</th>
               <th scope="col" class="table-item">項目類別</th>
               <th scope="col" class="table-desc">項目描述</th>
+              <th scope="col" class="table-edit"></th>
             </tr>
           </thead>
           <tbody>
@@ -80,10 +140,30 @@
               <td>{{item.cash}}</td>
               <td>{{item.category}}</td>
               <td class="text-left">{{item.disc}}</td>
+              <td
+                class="edit-icon"
+                @click="editItem(item, index)"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="editItem"
+      tabindex="-1"
+      aria-labelledby="editItem"
+      aria-hidden="true"
+    >
+      <EditDialog
+        :editData="item"
+        @editedData="editedData"
+      />
     </div>
   </div>
 </template>
@@ -94,8 +174,12 @@ import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.min.css';
 
 import moment from 'moment';
+import EditDialog from './components/EditDialog.vue';
 
 export default {
+  components: {
+    EditDialog
+  },
   data(){
     return {
       salary                 : 0,
@@ -107,6 +191,7 @@ export default {
       cash                   : 0,
       category               : '',
       disc                   : '',
+      item                   : null,
     }
   },
   metaInfo: {
@@ -185,6 +270,7 @@ export default {
       const disc = this.disc.trim()
 
       this.list.push({
+        index: Math.random(),
         date,
         cash,
         category : this.categorySwitch(category),
@@ -205,12 +291,16 @@ export default {
         case '01':
           return '生活支出';
         case '02':
-          return '投資';
+          return '投資理財';
         case '03':
           return '儲蓄';
       }
     },
     calculate () {
+      this.livingExpense  = 0
+      this.invest         = 0
+      this.savings        = 0
+
       // 對 list 分堆並計算各分類金額
       const groupByCategoryNo = this.groupArrayData(this.list, 'categoryNo')
       console.log(Object.entries(groupByCategoryNo))
@@ -237,13 +327,29 @@ export default {
         (acc[current[key]] = acc[current[key]] || []).push(current)
         return acc
       }, {})
+    },
+    editItem (item, index) {
+      this.item = {
+        index,
+        ...item
+      }
+      $('#editItem').modal('show')
+    },
+    editedData ($event) {
+      const findIndex = this.list.findIndex(item => item.index === $event.index)
+      // console.log('findEvent', findIndex, $event)
+      this.list[findIndex] = $event
+      console.log('list ===>', this.list)
+      this.calculate()
+      localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
+      $('#editItem').modal('hide')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import './assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
 .container {
   padding-top: 50px;
@@ -403,7 +509,13 @@ export default {
     background-color: #EDF6F9;
   }
   .table-item {
-    width: 15%;
+    width: 12%;
+  }
+  .table-edit {
+    width: 8%;
+  }
+  .edit-icon {
+    cursor: pointer;
   }
 }
 </style>
