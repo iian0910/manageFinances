@@ -250,7 +250,6 @@ export default {
       this.list = dataList
       this.salary = localStorage.getItem('DATA_SALARY')
       this.livingExpense = localStorage.getItem('LIVING_EXP')
-      console.log('livingExpense', this.livingExpense)
       this.invest = localStorage.getItem('INVEST')
       this.savings = localStorage.getItem('SAVINGS')
     }
@@ -303,7 +302,6 @@ export default {
 
       // 對 list 分堆並計算各分類金額
       const groupByCategoryNo = this.groupArrayData(this.list, 'categoryNo')
-      console.log(Object.entries(groupByCategoryNo))
 
       Object.entries(groupByCategoryNo).forEach((item) => {
         switch (item[0]) {
@@ -337,9 +335,7 @@ export default {
     },
     editedData ($event) {
       const findIndex = this.list.findIndex(item => item.index === $event.index)
-      // console.log('findEvent', findIndex, $event)
       this.list[findIndex] = $event
-      console.log('list ===>', this.list)
       this.calculate()
       localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
       $('#editItem').modal('hide')
