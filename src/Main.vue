@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- EditModal -->
     <div
       class="modal fade"
       id="editItem"
@@ -168,8 +168,22 @@
       aria-hidden="true"
     >
       <EditDialog
-        :editData="item"
+        :editData="editSelected"
         @editedData="editedData"
+      />
+    </div>
+
+    <!-- DeleteModal -->
+    <div
+      class="modal fade"
+      id="deleteItem"
+      tabindex="-1"
+      aria-labelledby="deleteItem"
+      aria-hidden="true"
+    >
+      <DeleteDialog
+        :deleteData="deleteSelected"
+        @deletedItem="deletedItem"
       />
     </div>
   </div>
@@ -181,11 +195,13 @@ import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.min.css';
 
 import moment from 'moment';
+import DeleteDialog from './components/DeleteDialog.vue';
 import EditDialog from './components/EditDialog.vue';
 
 export default {
   components: {
-    EditDialog
+    EditDialog,
+    DeleteDialog
   },
   data(){
     return {
@@ -198,7 +214,10 @@ export default {
       cash                   : 0,
       category               : '',
       disc                   : '',
-      item                   : null,
+      editSelected           : null,
+      deleteSelected         : null,
+      openEditDialog         : false,
+      openDeleteDialog       : false,
     }
   },
   metaInfo: {
@@ -341,10 +360,11 @@ export default {
       }, {})
     },
     editItem (item, index) {
-      this.item = {
+      this.editSelected = {
         index,
         ...item
       }
+      this.openEditDialog = true
       $('#editItem').modal('show')
     },
     editedData ($event) {
@@ -354,7 +374,12 @@ export default {
       localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
       $('#editItem').modal('hide')
     },
-    deleteItem (list) {
+    deleteItem (item) {
+      this.deleteSelected = item
+      this.openDeleteDialog = true
+      $('#deleteItem').modal('show')
+    },
+    deletedItem (list) {
       const newList = this.list.findIndex((item) => {
         return list.index === item.index
       })
@@ -362,6 +387,8 @@ export default {
 
       this.calculate()
       localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
+
+      $('#deleteItem').modal('hide')
     }
   }
 }
