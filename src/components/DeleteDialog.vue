@@ -51,7 +51,7 @@ export default {
 }
 
 // Dialog 設定
-.modal.show .modal-dialog{
+.modal.fade .modal-dialog{
   margin: 0;
   position: absolute;
   top: 50%;

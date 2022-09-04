@@ -140,7 +140,7 @@ export default {
 @import '@/assets/styles/main.scss';
 
 // Dialog 設定
-.modal.show .modal-dialog{
+.modal.fade .modal-dialog{
   max-width: 600px;
   width: 600px;
   margin: 0;
