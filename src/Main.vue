@@ -132,6 +132,7 @@
               <th scope="col" class="table-item">項目類別</th>
               <th scope="col" class="table-desc">項目描述</th>
               <th scope="col" class="table-edit"></th>
+              <th scope="col" class="table-delete"></th>
             </tr>
           </thead>
           <tbody>
@@ -145,6 +146,12 @@
                 @click="editItem(item, index)"
               >
                 <i class="bi bi-pencil-square"></i>
+              </td>
+              <td
+                class="edit-icon"
+                @click="deleteItem(item)"
+              >
+                <i class="bi bi-trash"></i>
               </td>
             </tr>
           </tbody>
@@ -296,11 +303,10 @@ export default {
       }
     },
     calculate () {
-      this.livingExpense  = 0
-      this.invest         = 0
-      this.savings        = 0
+      this.reset();
 
       // 對 list 分堆並計算各分類金額
+      console.log('this.list', this.list)
       const groupByCategoryNo = this.groupArrayData(this.list, 'categoryNo')
 
       Object.entries(groupByCategoryNo).forEach((item) => {
@@ -319,6 +325,14 @@ export default {
             break;
         }
       })
+    },
+    reset() {
+      this.livingExpense=0;
+      this.invest=0;
+      this.savings=0;
+      localStorage.setItem('LIVING_EXP', this.livingExpense);
+      localStorage.setItem('INVEST', this.invest);
+      localStorage.setItem('SAVINGS', this.savings);
     },
     groupArrayData (list, key) {
       return list.reduce((acc, current) => {
@@ -339,6 +353,15 @@ export default {
       this.calculate()
       localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
       $('#editItem').modal('hide')
+    },
+    deleteItem (list) {
+      const newList = this.list.findIndex((item) => {
+        return list.index === item.index
+      })
+      this.list.splice(newList, 1)
+
+      this.calculate()
+      localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
     }
   }
 }
@@ -507,8 +530,9 @@ export default {
   .table-item {
     width: 12%;
   }
-  .table-edit {
-    width: 8%;
+  .table-edit,
+  .table-delete {
+    width: 5%;
   }
   .edit-icon {
     cursor: pointer;
