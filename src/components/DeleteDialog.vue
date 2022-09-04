@@ -42,9 +42,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/main.scss';
+
 .hint {
   color: rgb(171, 19, 19);
   font-weight: normal;
   font-size: 18px;
+}
+
+// Dialog 設定
+.modal.show .modal-dialog{
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .modal-body {
+    padding: 40px;
+  }
 }
 </style>

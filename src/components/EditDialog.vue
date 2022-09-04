@@ -139,4 +139,17 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/main.scss';
 
+// Dialog 設定
+.modal.show .modal-dialog{
+  max-width: 600px;
+  width: 600px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .modal-body {
+    padding: 30px 40px;
+  }
+}
 </style>
