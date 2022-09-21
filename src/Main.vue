@@ -76,6 +76,7 @@
                 type="text"
                 class="info-input form-control"
                 v-model="salary"
+                @keyup="onlyNum($event, 'salary')"
               >
             </div>
             <div class="col-3 d-flex mb-20 align-middle">
@@ -93,6 +94,7 @@
                 type="text"
                 class="info-input form-control"
                 v-model="cash"
+                @keyup="onlyNum($event, 'cash')"
               >
             </div>
             <div class="col-3 d-flex mb-20">
@@ -389,6 +391,17 @@ export default {
       localStorage.setItem('DATA_LIST', JSON.stringify(this.list))
 
       $('#deleteItem').modal('hide')
+    },
+    onlyNum(val, key) {
+      switch(key) {
+        case 'salary':
+          this.salary = val.toString().replace(/[^0-9.]/g, '')
+          break;
+        case 'cash':
+          this.cash = val.toString().replace(/[^0-9.]/g, '')
+          break;
+      }
+      
     }
   }
 }
