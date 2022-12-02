@@ -393,12 +393,13 @@ export default {
       $('#deleteItem').modal('hide')
     },
     onlyNum(val, key) {
+      let keyInVal = val.target.value
       switch(key) {
         case 'salary':
-          this.salary = val.toString().replace(/[^0-9.]/g, '')
+          this.salary = keyInVal.toString().replace(/[^0-9.]/g, '')
           break;
         case 'cash':
-          this.cash = val.toString().replace(/[^0-9.]/g, '')
+          this.cash = keyInVal.toString().replace(/[^0-9.]/g, '')
           break;
       }
       
